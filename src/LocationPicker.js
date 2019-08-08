@@ -42,6 +42,20 @@ export default class LocationPicker extends Component {
             this.getCurrentPosition()
     }
 
+	// Re-render map if initial coordinate props change.
+	// UpdateIndex prop is a flag to force this to happen, in case you're resetting the map
+	// to its initial position
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.updateIndex !== prevProps.updateIndex){
+            this.setPosition({
+                latitude:this.props.initialCoordinate.latitude,
+                longitude:this.props.initialCoordinate.longitude,
+            });
+        }
+    }
+
+
+
     setPosition = ({latitude, longitude}) => {
         this.setState({
             loading: false,
@@ -138,6 +152,7 @@ export default class LocationPicker extends Component {
                         provider={PROVIDER_GOOGLE}
                         style={styles.mapView}
                         initialRegion={this.state.coordinate}
+                        region={this.state.coordinate}
                         minZoomLevel={16}
                         onPress={this.onMapPress}
                         {...props}>
